@@ -1,0 +1,17 @@
+{
+  "preferences": {
+    "base_dir": "data",
+    "output_dir": "clean",
+    "report_dir": "reports",
+    "default_format": "parquet"
+  },
+  "runs": [
+    {
+      "timestamp": "2025-12-24T22:08:34.777005",
+      "goal": "Create clean daily revenue by region with DQ and a report",
+      "out_path": "clean\\revenue_by_region.parquet",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251224_220834_Daily_Revenue_by_Region_-_Agent_Run.md",
+      "reflection_ok": false
+    }
+  ]
+}
