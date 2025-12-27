@@ -103,6 +103,125 @@
       "out_path": "clean\\revenue_by_region.parquet",
       "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251227_215202_Daily_Revenue_by_Region_-_Agent_Run.md",
       "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-27T21:53:32.501543",
+      "goal": "Create clean daily revenue by region with DQ and a report",
+      "out_path": "clean\\revenue_by_region.parquet",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251227_215332_Daily_Revenue_by_Region_-_Agent_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-27T21:54:51.126649",
+      "goal": "Create clean daily revenue by region with DQ and a report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251227_215451_Daily_Revenue_by_Region_-_Agent_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-27T21:55:10.064883",
+      "goal": "Create clean daily revenue by region with DQ and a report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251227_215510_Daily_Revenue_by_Region_-_Agent_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T00:52:54.003357",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_005254_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T00:53:55.027807",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "C:\\Users\\kanavsha\\OneDrive - Capgemini\\Documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_005355_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:23:11.354038",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_012311_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:24:36.767501",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_012436_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:34:56.866610",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_013456_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:39:14.741879",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_013914_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:41:05.991247",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014105_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:41:21.744816",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014121_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:41:47.782477",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014147_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:43:52.918614",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014352_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:45:51.636638",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014551_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:46:35.570720",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014635_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:48:14.944933",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_014814_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-28T01:51:14.987414",
+      "goal": "Generate clean daily revenue by region with DQ and report",
+      "out_path": "clean\\revenue_by_region.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251228_015114_Daily_Revenue_by_Region_-_Demo_Run.md",
+      "reflection_ok": false
     }
   ]
 }

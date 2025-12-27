@@ -1,0 +1,22 @@
+{
+    "non_null": [
+        "date_day",
+        "region",
+        "revenue"
+    ],
+    "unique": [
+        "order_id"
+    ],
+    "range": {
+        "revenue": {
+            "min": 0
+        }
+    },
+    "allowed_values": {
+        "region": [
+            "APAC",
+            "EMEA",
+            "AMER"
+        ]
+    }
+}

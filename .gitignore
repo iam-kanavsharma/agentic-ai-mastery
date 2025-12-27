@@ -1,2 +1,6 @@
 agentic-dataops/reports/*-_Agent_Run.md
 .venv
+.vscode/settings.json
+agentic-dataops/reports/*_Demo_Run.md
+**/__pycache__
+**/agentic_dataops.egg-info

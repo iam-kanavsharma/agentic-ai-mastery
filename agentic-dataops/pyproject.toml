@@ -1,0 +1,21 @@
+
+[project]
+name = "agentic-dataops"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = ["pandas", "pyyaml", "pyarrow", "typer[all]", "pytest"]
+readme = "README.md"
+description = "Rule-based DataOps agent"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[project.scripts]
+agentic-dataops = "agent.cli:app"   # optional console script
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

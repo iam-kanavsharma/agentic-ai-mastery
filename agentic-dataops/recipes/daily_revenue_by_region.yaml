@@ -1,0 +1,14 @@
+select: ["order_id","date","region","revenue","product_id"]
+filter: "region in ['APAC','EMEA','AMER'] and revenue >= 0"
+derive:
+  - name: date_day
+    expr: "pd.to_datetime(df['date']).dt.date.astype(str)"
+  - name: rev_in_k
+    expr: "df['revenue'] / 1000"
+join:
+  right_df: "regions"
+  'on': ["region"]
+  how: "left"
+groupby:
+  by: ["date_day","region","region_name"]
+  agg: {"revenue": "sum"}
