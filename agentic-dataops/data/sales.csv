@@ -5,3 +5,4 @@ order_id,date,region,revenue,product_id
 4,2025-01-02,AMER,700,P3
 5,2025-01-02,APAC,900,P2
 6,2025-01-03,AUST,1900,P4
+7,2025-01-04,AUST,1900,P5

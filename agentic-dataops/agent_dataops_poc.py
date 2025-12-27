@@ -154,7 +154,7 @@ def transform(
       "filter": "revenue >= 0 and region in ['APAC','EMEA','AMER']",
       "derive": [{"name":"date_day", "expr":"pd.to_datetime(df['date']).dt.date.astype(str)"}],
       "join": {"right_df": "regions", "on": ["region"], "how": "left"},
-      "groupby": {"by": ["date_day","region"], "agg": {"revenue":"sum"}}
+      "groupby": {"by": ["date_day","region"], "agg": {"revenue":"sum", "order_id":"collect_list"}}
     }
     """
     out = df.copy()
@@ -167,20 +167,30 @@ def transform(
         out = out.query(recipe["filter"], engine="python")
 
     if "derive" in recipe:
-        # Option B: Explicit df-referencing in expressions
+        
+        # force out to be an independent object before writing
+        out = out.copy(deep=True)
+
         safe_globals = {"__builtins__": {}}
         safe_locals_base = {
             "pd": pd,
-            "df": out,
+            "df": out,   # explicit reference
             "str": str,
             "int": int,
             "float": float,
             "abs": abs,
             "round": round
         }
+
+        # Build all derived columns first, then assign once (avoids intermediate warns)
+        new_cols = {}
         for d in recipe["derive"]:
-            value = eval(d["expr"], safe_globals, safe_locals_base)
-            out[d["name"]] = value
+            name = d["name"]
+            val = eval(d["expr"], safe_globals, safe_locals_base)
+            # Ensure index alignment; if it's an ndarray, keep length = len(out)
+            new_cols[name] = val
+
+        out = out.assign(**new_cols)
 
     if "join" in recipe:
         j = recipe["join"]
@@ -284,6 +294,7 @@ def run_agent(goal: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
 
         elif op == "dq_check":
             df = output_df if output_df is not None else sales_df
+            print(df)
             ok, issues = dq_check(df, st["rules"])
             log["dq_ok"] = ok
             log["dq_issues"] = issues
@@ -349,6 +360,7 @@ if __name__ == "__main__":
     # ---- Option B: df-referencing expression ----
     recipe = {
         "select": ["order_id","date","region","revenue","product_id"],
+        "filter": "region in ['AUST'] and revenue >= 800",
         "derive": [
             {"name":"date_day", "expr":"pd.to_datetime(df['date']).dt.date.astype(str)"},
             {"name":"rev_in_k", "expr":"df['revenue'] / 1000"}
@@ -359,9 +371,9 @@ if __name__ == "__main__":
 
     dq_rules = {
         "non_null": ["date_day","region","revenue"],
-        "unique": ["order_id"],  # realistic; set "date_day" to force a failure
+        "unique": ["date_day"],
         "range": {"revenue": {"min": 0}},
-        "allowed_values": {"region": ["APAC","EMEA","AMER"]}
+        "allowed_values": {"region": ["AUST"]}
     }
 
     out_path = os.path.join(MEM["preferences"]["output_dir"], "revenue_by_region.parquet")
