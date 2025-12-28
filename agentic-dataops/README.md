@@ -1,5 +1,28 @@
 # agentic-ai-mastery
 
+## Project overview
+
+agentic-dataops is a small rule-based data-operations agent and CLI for
+running repeatable data transforms and data-quality checks. It demonstrates
+a lightweight orchestration pattern that reads source datasets, applies
+file-based "recipes" (select, filter, derive, join, groupby), runs
+data-quality rules, writes cleaned outputs, and creates simple run reports.
+
+Key features
+- Recipe-driven transforms using simple YAML rules
+- Data quality checks (non-null, unique, range, allowed values)
+- File-based inputs/outputs (`.csv` and `.parquet`)
+- Small CLI and test-suite for demos and CI
+
+How it works (high level)
+- CLI (`python -m cli`) loads a recipe and DQ rules, then calls the
+  orchestrator to run the pipeline.
+- The orchestrator uses `agent.core` to `load_df`, `transform`, run
+  `dq_check`, then `save_df` and write a markdown report in `reports/`.
+- Derived columns are evaluated with a restricted AST-based evaluator
+  to avoid arbitrary `eval` execution.
+
+
 ## Create project folder
 `mkdir agentic-dataops && cd agentic-dataops`
 
