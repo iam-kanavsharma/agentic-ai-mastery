@@ -1,6 +1,7 @@
 # add/ensure these
 from __future__ import annotations
 
+import ast
 import os
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -144,7 +145,67 @@ def transform(
         # force out to be an independent object before writing
         out = out.copy(deep=True)
 
-        safe_globals = {"__builtins__": {}}
+        # Use a safe AST-validated evaluator instead of raw eval
+        def _get_root_name(node: ast.AST) -> Optional[str]:
+            if isinstance(node, ast.Name):
+                return node.id
+            if isinstance(node, ast.Attribute):
+                return _get_root_name(node.value)
+            if isinstance(node, ast.Subscript):
+                return _get_root_name(node.value)
+            if isinstance(node, ast.Call):
+                # For chained calls like pd.to_datetime(...).dt.date.astype(...)
+                return _get_root_name(node.func)
+            return None
+
+        class _SafeVisitor(ast.NodeVisitor):
+            def __init__(self, allowed_names: set, allowed_roots: set):
+                self.allowed_names = allowed_names
+                self.allowed_roots = allowed_roots
+
+            def visit_Name(self, node: ast.Name) -> None:
+                if node.id not in self.allowed_names:
+                    raise ValueError(f"Use of name '{node.id}' is not allowed in derived expressions")
+
+            def visit_Call(self, node: ast.Call) -> None:
+                root = _get_root_name(node.func)
+                if root is None or root not in self.allowed_roots:
+                    raise ValueError(f"Function calls to '{root}' are not allowed in derived expressions")
+                self.generic_visit(node)
+
+            def visit_Attribute(self, node: ast.Attribute) -> None:
+                if node.attr.startswith("__"):
+                    raise ValueError("Access to dunder attributes is not allowed")
+                self.generic_visit(node)
+
+            def visit_Lambda(self, node: ast.Lambda) -> None:
+                raise ValueError("Lambdas are not allowed in derived expressions")
+
+            def visit_ListComp(self, node: ast.ListComp) -> None:
+                raise ValueError("Comprehensions are not allowed in derived expressions")
+
+            def visit_GeneratorExp(self, node: ast.GeneratorExp) -> None:
+                raise ValueError("Comprehensions are not allowed in derived expressions")
+
+            def visit_Import(self, node: ast.Import) -> None:
+                raise ValueError("Import statements are not allowed in derived expressions")
+
+            def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+                raise ValueError("Import statements are not allowed in derived expressions")
+
+        def safe_eval(expr: str, safe_locals: Dict[str, Any]) -> Any:
+            try:
+                node = ast.parse(expr, mode="eval")
+            except SyntaxError as e:
+                raise ValueError("Invalid expression syntax") from e
+
+            allowed_names = set(safe_locals.keys())
+            allowed_roots = allowed_names
+            visitor = _SafeVisitor(allowed_names, allowed_roots)
+            visitor.visit(node)
+
+            return eval(compile(node, "<safe_eval>", "eval"), {"__builtins__": {}}, safe_locals)
+
         safe_locals_base = {
             "pd": pd,
             "df": out,   # explicit reference
@@ -159,8 +220,7 @@ def transform(
         new_cols = {}
         for d in recipe["derive"]:
             name = d["name"]
-            val = eval(d["expr"], safe_globals, safe_locals_base)
-            # Ensure index alignment; if it's an ndarray, keep length = len(out)
+            val = safe_eval(d["expr"], safe_locals_base)
             new_cols[name] = val
 
         out = out.assign(**new_cols)
