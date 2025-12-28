@@ -5,9 +5,16 @@
 
 ## (Optional) Create virtual env
 `python -m venv .venv`
-## Windows: .venv\Scripts\activate
-## macOS/Linux:
-`source .venv/Scripts/activate`
+## Activate the virtual environment
+
+- Windows (Command Prompt):
+  `.venv\Scripts\activate`
+- Windows (PowerShell):
+  `.venv\Scripts\Activate.ps1`
+- Windows (Git Bash / MSYS):
+  `source .venv/Scripts/activate`
+- macOS / Linux (bash, zsh):
+  `source .venv/bin/activate`
 
 ## Install packages
 `pip install -e .`
