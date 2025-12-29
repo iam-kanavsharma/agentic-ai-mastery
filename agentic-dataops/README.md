@@ -146,12 +146,12 @@ sh scripts/demo_run.sh
 
 ### List datasets
 ```
-python -m cli list --base-dir data
+python -m agent.cli list --base-dir data
 ```
 
 ### Run with file-based recipe and rules
 ```
-python -m cli run "Daily Revenue by Region" \
+python -m agent.cli run "Daily Revenue by Region" \
   --sales-path data/sales.csv \
   --regions-path data/regions.csv \
   --out-path clean/revenue_by_region.csv \
@@ -162,5 +162,5 @@ python -m cli run "Daily Revenue by Region" \
 
 ### Show recent runs
 ```
-python -m cli history --limit 5
+python -m agent.cli history --limit 5
 ```

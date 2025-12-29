@@ -1,5 +1,5 @@
 select: ["order_id","date","region","revenue","product_id"]
-filter: "region in ['APAC','EMEA','AMER'] and revenue >= 0"
+filter: "region in ['APAC','EMEA','AMER'] and revenue >= 1987430"
 derive:
   - name: date_day
     expr: "pd.to_datetime(df['date']).dt.date.astype(str)"
