@@ -13,7 +13,11 @@ from pathlib import Path
 from agent import orchestrator
 from agent.agent_recipe_generator import generate_recipe_from_prompt
 from agent.llm_client import LLMClient
+from dotenv import load_dotenv
 
+# Load environment variables from agentic-dataops/.env so the script works
+# both inside VS Code (python.envFile) and when run from the CLI.
+load_dotenv(dotenv_path=Path(__file__).parents[1] / ".env")
 
 def main():
     p = argparse.ArgumentParser()

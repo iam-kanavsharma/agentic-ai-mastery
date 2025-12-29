@@ -61,6 +61,9 @@ class LLMClient:
             api_endpoint = f"{self.location}-aiplatform.googleapis.com"
             client_options = ClientOptions(api_endpoint=api_endpoint)
             self.client = PredictionServiceClient(client_options=client_options)
+            # Endpoint/id used for online prediction (deployed endpoint).
+            # Accept either a numeric endpoint id or a full resource name.
+            self.endpoint_id = os.environ.get("VERTEX_ENDPOINT") or os.environ.get("VERTEX_ENDPOINT_ID")
 
         else:
             raise ValueError("Unsupported LLM backend: %s" % self.backend)
@@ -86,6 +89,18 @@ class LLMClient:
         # Vertex / Gemini path
         # Use PredictionServiceClient.predict against model resource
         # Endpoint format: projects/{project}/locations/{location}/models/{model}
+        if not getattr(self, "endpoint_id", None):
+            raise RuntimeError(
+                "VERTEX_ENDPOINT (deployed endpoint id or full resource name) is required for Vertex predict. "
+                "Set VERTEX_ENDPOINT to the endpoint id (e.g. '123456789') or "
+                "the full resource 'projects/PROJECT/locations/LOCATION/endpoints/ENDPOINT'."
+            )
+        if "/" in self.endpoint_id:
+            endpoint = self.endpoint_id
+        else:
+            endpoint = f"projects/{self.project}/locations/{self.location}/endpoints/{self.endpoint_id}"
+
+
         endpoint = f"projects/{self.project}/locations/{self.location}/models/{self.model}"
         instances = [{"content": prompt}]
         parameters: dict[str, Any] = {"temperature": temperature, "maxOutputTokens": max_tokens}

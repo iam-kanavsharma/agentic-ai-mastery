@@ -4,3 +4,5 @@ agentic-dataops/reports/*-_Agent_Run.md
 agentic-dataops/reports/*_Demo_Run.md
 **/__pycache__
 **/agentic_dataops.egg-info
+agentic-dataops/.env
+agentic-dataops/reports/*_Generated_Run.md
