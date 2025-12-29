@@ -6,3 +6,5 @@ agentic-dataops/reports/*_Demo_Run.md
 **/agentic_dataops.egg-info
 agentic-dataops/.env
 agentic-dataops/reports/*_Generated_Run.md
+# Google Cloud credentials
+gen-lang-client-*.json
