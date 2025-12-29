@@ -17,11 +17,11 @@ except Exception:  # pragma: no cover - optional runtime dependency
     openai = None
 
 try:
-    from google.api_core.client_options import ClientOptions
-    from google.cloud.aiplatform.gapic import PredictionServiceClient
-except Exception:  # pragma: no cover - optional runtime dependency
-    PredictionServiceClient = None
-    ClientOptions = None
+    import vertexai
+    from vertexai.generative_models import GenerativeModel
+except ImportError:  # pragma: no cover - optional runtime dependency
+    vertexai = None
+    GenerativeModel = None
 
 
 class LLMClient:
@@ -48,27 +48,24 @@ class LLMClient:
             openai.api_key = self.api_key
 
         elif self.backend == "vertex":
-            if PredictionServiceClient is None:
-                raise RuntimeError("google-cloud-aiplatform is not installed. Install via `pip install google-cloud-aiplatform`")
+            if vertexai is None:
+                raise RuntimeError("google-cloud-aiplatform is not installed. Install via `pip install google-cloud-aiplatform>=1.38`")
             # basic required envs
             self.project = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("PROJECT_ID")
             self.location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
             if not self.project:
                 raise RuntimeError("Set GOOGLE_CLOUD_PROJECT (or PROJECT_ID) to your GCP project")
             if not self.model:
-                raise RuntimeError("Set VERTEX_MODEL to the model id (e.g. 'gemini-1.5') or full resource name")
-            # create prediction client; allow overriding endpoint via GOOGLE_CLOUD_LOCATION
-            api_endpoint = f"{self.location}-aiplatform.googleapis.com"
-            client_options = ClientOptions(api_endpoint=api_endpoint)
-            self.client = PredictionServiceClient(client_options=client_options)
-            # Endpoint/id used for online prediction (deployed endpoint).
-            # Accept either a numeric endpoint id or a full resource name.
-            self.endpoint_id = os.environ.get("VERTEX_ENDPOINT") or os.environ.get("VERTEX_ENDPOINT_ID")
+                raise RuntimeError("Set VERTEX_MODEL to the model id (e.g. 'gemini-1.5-pro')")
+            
+            # Initialize Vertex AI
+            vertexai.init(project=self.project, location=self.location)
+            self.client = GenerativeModel(self.model)
 
         else:
             raise ValueError("Unsupported LLM backend: %s" % self.backend)
 
-    def generate(self, prompt: str, max_tokens: int = 512, temperature: float = 0.0) -> str:
+    def generate(self, prompt: str, max_tokens: int = 4096, temperature: float = 0.0) -> str:
         """Generate text for `prompt` using the selected backend.
 
         Returns the model's text. Errors are raised with actionable guidance.
@@ -87,38 +84,17 @@ class LLMClient:
             return msg.get("content", "")
 
         # Vertex / Gemini path
-        # Use PredictionServiceClient.predict against model resource
-        # Endpoint format: projects/{project}/locations/{location}/models/{model}
-        if not getattr(self, "endpoint_id", None):
-            raise RuntimeError(
-                "VERTEX_ENDPOINT (deployed endpoint id or full resource name) is required for Vertex predict. "
-                "Set VERTEX_ENDPOINT to the endpoint id (e.g. '123456789') or "
-                "the full resource 'projects/PROJECT/locations/LOCATION/endpoints/ENDPOINT'."
+        try:
+            response = self.client.generate_content(
+                prompt,
+                generation_config={
+                    "max_output_tokens": max_tokens,
+                    "temperature": temperature,
+                },
             )
-        if "/" in self.endpoint_id:
-            endpoint = self.endpoint_id
-        else:
-            endpoint = f"projects/{self.project}/locations/{self.location}/endpoints/{self.endpoint_id}"
-
-
-        endpoint = f"projects/{self.project}/locations/{self.location}/models/{self.model}"
-        instances = [{"content": prompt}]
-        parameters: dict[str, Any] = {"temperature": temperature, "maxOutputTokens": max_tokens}
-
-        resp = self.client.predict(endpoint=endpoint, instances=instances, parameters=parameters)
-        preds = list(resp.predictions) if getattr(resp, "predictions", None) is not None else []
-        if not preds:
-            return ""
-        # predictions may be dict-like; attempt safe extraction
-        first = preds[0]
-        if isinstance(first, dict):
-            if "content" in first:
-                return first.get("content", "")
-            if "candidates" in first and first["candidates"]:
-                c = first["candidates"][0]
-                return c.get("content") or c.get("text") or ""
-        # fallback: return string representation
-        return str(first)
+            return response.text
+        except Exception as e:
+            raise RuntimeError(f"Vertex AI generation failed: {e}") from e
 
 
 __all__ = ["LLMClient"]
