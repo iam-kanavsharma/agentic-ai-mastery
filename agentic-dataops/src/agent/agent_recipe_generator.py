@@ -19,7 +19,8 @@ DEFAULT_PROMPT_TEMPLATE = (
     "and optional `groupby` (object). Return ONLY valid JSON (no surrounding\n"
     "markdown). Example: {\n"
     "  \"select\": [\"order_id\", \"date\"],\n"
-    "  \"derive\": [{\"name\":\"date_day\", \"expr\":\"pd.to_datetime(df['date']).dt.date.astype(str)\"}]\n"
+    "  \"derive\": [{\"name\":\"date_day\", \"expr\":\"pd.to_datetime(df['date']).dt.date.astype(str)\"}],\n"
+    "  \"groupby\": {\"by\": [\"date_day\"], \"agg\": {\"revenue\": \"sum\"}}\n"
     "}\n"
 )
 
@@ -56,6 +57,9 @@ def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float 
         for d in obj["derive"]:
             if not isinstance(d, dict) or "name" not in d or "expr" not in d:
                 raise ValueError("Each derive item must be an object with 'name' and 'expr'")
+    if "groupby" in obj:
+        if "by" not in obj["groupby"]:
+            raise ValueError("`groupby` must contain a 'by' key")
 
     return obj
 
