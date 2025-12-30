@@ -341,6 +341,55 @@
       "out_path": "clean/out_d.csv",
       "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_154814_Generated_Run.md",
       "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-30T16:15:20.364121",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_161520_Generated_Run.md",
+      "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-30T16:19:10.273761",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_161910_Generated_Run.md",
+      "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-30T17:51:31.273061",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_175131_Generated_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-30T18:02:34.285528",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_180234_Generated_Run.md",
+      "reflection_ok": false
+    },
+    {
+      "timestamp": "2025-12-30T18:03:58.906895",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_180358_Generated_Run.md",
+      "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-30T18:05:15.695704",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_180515_Generated_Run.md",
+      "reflection_ok": true
+    },
+    {
+      "timestamp": "2025-12-30T18:07:33.745228",
+      "goal": "Generated Run",
+      "out_path": "clean/out_complex.csv",
+      "report_path": "c:\\users\\kanavsha\\onedrive - capgemini\\documents\\kanavsha\\workspace\\agentic-ai-mastery\\agentic-dataops\\reports\\20251230_180733_Generated_Run.md",
+      "reflection_ok": true
     }
   ]
 }

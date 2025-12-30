@@ -18,20 +18,26 @@ DEFAULT_PROMPT_TEMPLATE = (
     "optional `derive` (list of {name, expr}), optional `join` (object),\n"
     "and optional `groupby` (object). Return ONLY valid JSON (no surrounding\n"
     "markdown). Example: {\n"
-    "  \"select\": [\"order_id\", \"date\"],\n"
+    "  \"select\": [\"order_id\", \"date\", \"region\"],\n"
+    "  \"join\": {\"right_df\": \"regions\", \"on\": [\"region\"], \"how\": \"left\"},\n"
     "  \"derive\": [{\"name\":\"date_day\", \"expr\":\"pd.to_datetime(df['date']).dt.date.astype(str)\"}],\n"
-    "  \"groupby\": {\"by\": [\"date_day\"], \"agg\": {\"revenue\": \"sum\"}}\n"
+    "  \"groupby\": {\"by\": [\"date_day\", \"region_name\"], \"agg\": {\"revenue\": \"sum\"}}\n"
     "}\n"
 )
 
 
-def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float = 0.0) -> Dict[str, Any]:
+def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float = 0.0, dataset_context: str = "") -> Dict[str, Any]:
     """Generate a recipe dict from a natural-language prompt using `llm`.
 
     This performs minimal validation and returns a dict suitable for
     `transform()`.
     """
-    full_prompt = DEFAULT_PROMPT_TEMPLATE + "\nUser request: " + prompt
+    full_prompt = DEFAULT_PROMPT_TEMPLATE
+    if dataset_context:
+        full_prompt += f"\nContext - Available Datasets:\n{dataset_context}\n"
+    
+    full_prompt += "\nUser request: " + prompt
+    print(full_prompt)
     raw = llm.generate(full_prompt, temperature=temperature)
 
     # Try to extract JSON from the response (defensive)
@@ -60,6 +66,11 @@ def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float 
     if "groupby" in obj:
         if "by" not in obj["groupby"]:
             raise ValueError("`groupby` must contain a 'by' key")
+    if "join" in obj:
+        if "right_df" not in obj["join"]:
+            raise ValueError("`join` must contain a 'right_df' key")
+        if "on" not in obj["join"]:
+            raise ValueError("`join` must contain an 'on' key")
 
     return obj
 

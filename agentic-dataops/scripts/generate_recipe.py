@@ -10,6 +10,8 @@ import argparse
 import json
 from pathlib import Path
 
+import pandas as pd
+
 from agent import orchestrator
 from agent.agent_recipe_generator import generate_recipe_from_prompt
 from agent.llm_client import LLMClient
@@ -47,8 +49,25 @@ def main():
         "groupby": {"by": ["date_day","region","region_name"], "agg": {"revenue":"sum"}}
       }
     else:
+      # Build dataset context from provided paths
+      context_lines = []
+      if args.sales_path:
+          try:
+              cols = pd.read_csv(args.sales_path, nrows=0).columns.tolist()
+              context_lines.append(f"- sales: {cols}")
+          except Exception as e:
+              pass
+      if args.regions_path:
+          try:
+              cols = pd.read_csv(args.regions_path, nrows=0).columns.tolist()
+              context_lines.append(f"- regions: {cols}")
+          except Exception as e:
+              pass
+      
+      dataset_context = "\n".join(context_lines) if context_lines else ""
+
       llm = LLMClient(model=args.model)
-      recipe = generate_recipe_from_prompt(args.prompt, llm, temperature=args.temperature)
+      recipe = generate_recipe_from_prompt(args.prompt, llm, temperature=args.temperature, dataset_context=dataset_context)
 
     print(json.dumps(recipe, indent=2))
 

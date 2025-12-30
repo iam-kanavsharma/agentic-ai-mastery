@@ -133,15 +133,17 @@ def transform(
     """
     out = df.copy()
 
-    if "select" in recipe:
-        out = out[recipe["select"]]
+    # 1. Join (Expand Data)
+    if "join" in recipe:
+        j = recipe["join"]
+        right_name = j["right_df"]
+        if aux_dfs is None or right_name not in aux_dfs:
+            raise ValueError(f"Aux DF '{right_name}' not provided for join.")
+        # Fix: ensure we don't drop join keys if select was hypothetically earlier(now it's last)
+        out = out.merge(aux_dfs[right_name], on=j["on"], how=j.get("how", "left"))
 
-    if "filter" in recipe and recipe["filter"]:
-        # Note: filter still uses pandas .query() over current columns
-        out = out.query(recipe["filter"], engine="python")
-
+    # 2. Derive (Add columns)
     if "derive" in recipe:
-        
         # force out to be an independent object before writing
         out = out.copy(deep=True)
 
@@ -225,16 +227,22 @@ def transform(
 
         out = out.assign(**new_cols)
 
-    if "join" in recipe:
-        j = recipe["join"]
-        right_name = j["right_df"]
-        if aux_dfs is None or right_name not in aux_dfs:
-            raise ValueError(f"Aux DF '{right_name}' not provided for join.")
-        out = out.merge(aux_dfs[right_name], on=j["on"], how=j.get("how", "left"))
+    # 3. Filter (Reduce rows)
+    if "filter" in recipe and recipe["filter"]:
+        # Note: filter still uses pandas .query() over current columns
+        out = out.query(recipe["filter"], engine="python")
 
+    # 4. Groupby (Aggregate)
     if "groupby" in recipe:
         g = recipe["groupby"]
         out = out.groupby(g["by"], dropna=False).agg(g["agg"]).reset_index()
 
+    # 5. Select (Final Projection)
+    if "select" in recipe:
+        # Only select columns that exist (graceful handling for groupby results)
+        available = [c for c in recipe["select"] if c in out.columns]
+        if available:
+            out = out[available]
+        
     return out
 
