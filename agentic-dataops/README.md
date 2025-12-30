@@ -164,3 +164,48 @@ python -m agent.cli run "Daily Revenue by Region" \
 ```
 python -m agent.cli history --limit 5
 ```
+
+## MCP Server
+
+This project includes a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that exposes the agent's capabilities to LLM clients (like Claude Desktop).
+
+### Features
+- **Tools**: `generate_data_recipe` - Generate and execute data transformations from natural language.
+- **Resources**: `file://data/*.csv` - Direct read access to the data directory.
+
+### Running the Server
+
+1. **Install dependencies**:
+   ```bash
+   pip install -e .
+   ```
+
+2. **Run the server**:
+   ```bash
+   # Run via the installed script
+   agentic-mcp
+   
+   # Or using uv/pip directly
+   python -m mcp_server.main
+   ```
+
+### Connecting to Claude Desktop
+Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "agentic-dataops": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "ABSOLUTE/PATH/TO/agentic-dataops",
+        "run",
+        "agentic-mcp"
+      ]
+    }
+  }
+}
+```
+*(Replace `ABSOLUTE/PATH/TO...` with the actual path to this repository)*
+

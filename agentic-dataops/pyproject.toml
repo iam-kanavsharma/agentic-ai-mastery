@@ -3,7 +3,7 @@
 name = "agentic-dataops"
 version = "0.1.0"
 requires-python = ">=3.9"
-dependencies = ["pandas", "pyyaml", "pyarrow", "typer[all]", "pytest", "google-cloud-aiplatform", "python-dotenv"]
+dependencies = ["pandas", "pyyaml", "pyarrow", "typer[all]", "pytest", "google-cloud-aiplatform", "python-dotenv", "mcp"]
 readme = "README.md"
 description = "Rule-based DataOps agent"
 
@@ -12,6 +12,7 @@ dev = ["pytest", "pytest-cov"]
 
 [project.scripts]
 agentic-dataops = "agent.cli:app"   # optional console script
+agentic-mcp = "mcp_server.main:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
