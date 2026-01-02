@@ -1,14 +1,26 @@
 import sys
 import os
+import signal
+import time
 
 # Add src to path to allow direct import if installed in editable mode doesn't pick up immediately
 sys.path.append(os.path.join(os.getcwd(), "src"))
 
+def timeout_handler(signum, frame):
+    raise TimeoutError("Import timed out")
+
+# Set 10s timeout
+signal.signal(signal.SIGALRM, timeout_handler) if hasattr(signal, "SIGALRM") else None
+# Windows doesn't support SIGALRM easily, so we might skip signal on Windows or use a different approach.
+# Since user is on Windows, let's just use simple prints before/after.
+
 try:
+    print("Attempting to import mcp_server.main...")
+    start_time = time.time()
     from mcp_server.main import mcp
-    print("SUCCESS: MCP Server imported.")
+    print(f"SUCCESS: MCP Server imported in {time.time() - start_time:.2f}s.")
+    
     # FastMCP stores tools in internal dicts, we can check them
-    # Note: Accessing private/internal attributes for verification if public API unavailable
     tool_names = [t.name for t in mcp._tools.values()] if hasattr(mcp, "_tools") else "Unknown"
     print(f"Registered Tools: {tool_names}")
     
@@ -18,6 +30,7 @@ try:
 
 except ImportError as e:
     print(f"FAILURE: Could not import mcp_server.main. Error: {e}")
+    print("Hint: Ensure 'mcp_server' is listed in pyproject.toml packages.")
     sys.exit(1)
 except Exception as e:
     print(f"FAILURE: Error during inspection. Error: {e}")
