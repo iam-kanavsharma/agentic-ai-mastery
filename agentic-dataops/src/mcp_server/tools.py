@@ -6,8 +6,14 @@ from mcp.server.fastmcp import FastMCP, Context
 from agent.agent_recipe_generator import generate_recipe_from_prompt
 from agent.llm_client import LLMClient
 from agent import orchestrator
+import datetime
 
 def register_tools(mcp: FastMCP):
+    @mcp.tool()
+    def get_system_time() -> str:
+        """Returns the current system time"""
+        return datetime.datetime.now().isoformat()
+
     @mcp.tool()
     def generate_data_recipe(prompt: str, sales_path: str, regions_path: str = None, out_path: str = "output.csv") -> str:
         """

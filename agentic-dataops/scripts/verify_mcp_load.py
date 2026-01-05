@@ -21,7 +21,14 @@ try:
     print(f"SUCCESS: MCP Server imported in {time.time() - start_time:.2f}s.")
     
     # FastMCP stores tools in internal dicts, we can check them
-    tool_names = [t.name for t in mcp._tools.values()] if hasattr(mcp, "_tools") else "Unknown"
+    # Updated to check _tool_manager for newer FastMCP versions
+    if hasattr(mcp, "_tool_manager") and hasattr(mcp._tool_manager, "_tools"):
+         tool_names = list(mcp._tool_manager._tools.keys())
+    elif hasattr(mcp, "_tools"):
+         tool_names = [t.name for t in mcp._tools.values()]
+    else:
+         tool_names = "Unknown"
+    
     print(f"Registered Tools: {tool_names}")
     
     # Check resources
