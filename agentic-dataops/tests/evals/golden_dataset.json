@@ -1,0 +1,23 @@
+[
+    {
+        "id": "basic_revenue",
+        "prompt": "Calculate total revenue by region name",
+        "expected_keys": [
+            "groupby",
+            "join"
+        ],
+        "forbidden_keys": [
+            "clarification"
+        ]
+    },
+    {
+        "id": "vague_nonsense",
+        "prompt": "I do not know what I am talking about",
+        "expected_clarification": true
+    },
+    {
+        "id": "clarification_needed_nonsense",
+        "prompt": "blue horses flying underwater",
+        "expected_clarification": true
+    }
+]

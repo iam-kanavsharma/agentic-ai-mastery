@@ -1,0 +1,72 @@
+=== Running Evals on 3 cases ===
+
+Processing case: basic_revenue
+  Prompt: Calculate total revenue by region
+Given the user request, produce a JSON object that represents a recipe
+for the agentic-dataops project. The JSON must contain only the keys
+used by `transform()`: optional `select` (list), optional `filter` (string),
+optional `derive` (list of {name, expr}), optional `join` (object),
+and optional `groupby` (object). Return ONLY valid JSON (no surrounding
+markdown). 
+If the user request is vague, nonsense, or not related to data operations,
+return a JSON with a single key `clarification` containing a question string.
+Example Recipe: {
+  "select": ["order_id", "date", "region"],
+  "join": {"right_df": "regions", "on": ["region"], "how": "left"},
+  "derive": [{"name":"date_day", "expr":"pd.to_datetime(df['date']).dt.date.astype(str)"}],
+  "groupby": {"by": ["date_day", "region_name"], "agg": {"revenue": "sum"}}
+}
+Example Clarification: {
+  "clarification": "Could you specify which dataset you want to analyze?"
+}
+
+User request: Calculate total revenue by region
+  [FAIL] Missing keys: ['join', 'select']
+
+Processing case: vague_nonsense
+  Prompt: I do not know what I am talking about
+Given the user request, produce a JSON object that represents a recipe
+for the agentic-dataops project. The JSON must contain only the keys
+used by `transform()`: optional `select` (list), optional `filter` (string),
+optional `derive` (list of {name, expr}), optional `join` (object),
+and optional `groupby` (object). Return ONLY valid JSON (no surrounding
+markdown). 
+If the user request is vague, nonsense, or not related to data operations,
+return a JSON with a single key `clarification` containing a question string.
+Example Recipe: {
+  "select": ["order_id", "date", "region"],
+  "join": {"right_df": "regions", "on": ["region"], "how": "left"},
+  "derive": [{"name":"date_day", "expr":"pd.to_datetime(df['date']).dt.date.astype(str)"}],
+  "groupby": {"by": ["date_day", "region_name"], "agg": {"revenue": "sum"}}
+}
+Example Clarification: {
+  "clarification": "Could you specify which dataset you want to analyze?"
+}
+
+User request: I do not know what I am talking about
+  [PASS] Correctly asked for clarification.
+
+Processing case: clarification_needed_nonsense
+  Prompt: blue horses flying underwater
+Given the user request, produce a JSON object that represents a recipe
+for the agentic-dataops project. The JSON must contain only the keys
+used by `transform()`: optional `select` (list), optional `filter` (string),
+optional `derive` (list of {name, expr}), optional `join` (object),
+and optional `groupby` (object). Return ONLY valid JSON (no surrounding
+markdown). 
+If the user request is vague, nonsense, or not related to data operations,
+return a JSON with a single key `clarification` containing a question string.
+Example Recipe: {
+  "select": ["order_id", "date", "region"],
+  "join": {"right_df": "regions", "on": ["region"], "how": "left"},
+  "derive": [{"name":"date_day", "expr":"pd.to_datetime(df['date']).dt.date.astype(str)"}],
+  "groupby": {"by": ["date_day", "region_name"], "agg": {"revenue": "sum"}}
+}
+Example Clarification: {
+  "clarification": "Could you specify which dataset you want to analyze?"
+}
+
+User request: blue horses flying underwater
+  [PASS] Correctly asked for clarification.
+
+=== Summary: 2/3 Passed (66.7%) ===
