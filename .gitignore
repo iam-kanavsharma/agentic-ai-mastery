@@ -7,6 +7,6 @@ agentic-dataops/reports/*_Demo_Run.md
 agentic-dataops/.env
 agentic-dataops/reports/*_Generated_Run.md
 agentic-dataops/reports/*_MCP_Request*.md
+agentic-dataops/agent_memory.json
 # Google Cloud credentials
 gen-lang-client-*.json
-agentic-dataops/agent_memory.json

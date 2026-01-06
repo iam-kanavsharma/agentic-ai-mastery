@@ -30,7 +30,7 @@ async def main():
         project_root = os.path.dirname(base_dir)
         sales_path = os.path.join(project_root, "data", "sales.csv")
         regions_path = os.path.join(project_root, "data", "regions.csv")
-        out_path = os.path.join(project_root, "output_demo.csv")
+        out_path = os.path.join(project_root, "revenue_analysis_output.csv")
         
         print(f" - Prompt: 'Calculate total revenue by region'")
         print(f" - Sales: {sales_path}")

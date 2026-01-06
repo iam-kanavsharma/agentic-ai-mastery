@@ -84,7 +84,7 @@ To truly understand how a client (like Claude) sees the server, I created a demo
 I run this specific command in the terminal:
 
 ```bash
-python scripts/demo_client.py
+python scripts/mcp_client_demo.py
 ```
 
 This script:
@@ -143,7 +143,7 @@ MCP Bridges the gap between the **General Intelligence** (Claude) and the **Spec
 
 # Advanced Usage: Full Workflow Demo
 
-I updated `scripts/demo_client.py` to demonstrate the full architectural workflow:
+I updated `scripts/mcp_client_demo.py` to demonstrate the full architectural workflow:
 
 1.  **Preparation**: Paths to `data/sales.csv` and `data/regions.csv` are specified.
 2.  **The Request**: The client calls `generate_data_recipe` with the prompt: *"Calculate total revenue by region"*.
@@ -155,6 +155,6 @@ I updated `scripts/demo_client.py` to demonstrate the full architectural workflo
 
 I run it myself with:
 ```bash
-python scripts/demo_client.py
+python scripts/mcp_client_demo.py
 ```
 This demonstrates the "Specialist" in action!
