@@ -1,30 +1,30 @@
-# Learning MCP with `agentic-dataops`
+# How I Learned MCP with `agentic-dataops`
 
-The Model Context Protocol (MCP) allows AI models to interact with external data and tools. Your current codebase uses `FastMCP`, a high-level library that makes building these servers easy.
+The Model Context Protocol (MCP) allows AI models to interact with external data and tools. In my codebase, I used `FastMCP`, a high-level library that makes building these servers easy.
 
-Here is a step-by-step breakdown of how it works in your project.
+Here is a step-by-step breakdown of how I implemented it.
 
 ## 1. The Server Entry Point (`src/mcp_server/main.py`)
-This file is the specific brain of your MCP APPLICATION.
+This file is the specific brain of my MCP application.
 
 ```python
 # src/mcp_server/main.py
 from mcp.server.fastmcp import FastMCP
 
-# Initialize the server
+# I initialized the server here
 mcp = FastMCP("Agentic DataOps")
 
 # ... imports ...
 
-# Register capabilities
+# I registered capabilities
 register_tools(mcp)
 register_resources(mcp)
 ```
 
-**Key Concept**: `FastMCP("Name")` creates an MCP server instance. This instance will handle the communication protocol (JSON-RPC) over stdio (standard input/output) automatically when you run `mcp.run()`.
+**Key Concept**: I used `FastMCP("Name")` to create the server instance. This instance handles the communication protocol (JSON-RPC) over stdio automatically when I run `mcp.run()`.
 
 ## 2. Resources (`src/mcp_server/resources.py`)
-**Resources** are how you expose *data* to the LLM. Think of them like file getters.
+**Resources** are how I expose *data* to the LLM. I think of them like file getters.
 
 ```python
 # src/mcp_server/resources.py
@@ -35,12 +35,12 @@ def get_data_file(filename: str) -> str:
     return file_path.read_text()
 ```
 
-- **Decorator**: `@mcp.resource("URI_TEMPLATE")` tells the LLM "I have data available at this pattern".
-- **Function**: When the LLM asks for `file://data/sales.csv`, this function runs and returns the content string.
-- **Use Case**: Providing context, documentation, or raw data files (like your CSVs) to the LLM.
+- **Decorator**: I used `@mcp.resource` to tell the LLM "I have data available at this pattern".
+- **Function**: When the LLM asks for `file://data/sales.csv`, my function runs and returns the content string.
+- **Use Case**: I use this to provide context, documentation, or raw data files (like my CSVs) to the LLM.
 
 ## 3. Tools (`src/mcp_server/tools.py`)
-**Tools** are how you give the LLM *capabilities* to do things.
+**Tools** are how I gave the LLM *capabilities* to do things.
 
 ```python
 # src/mcp_server/tools.py
@@ -52,16 +52,16 @@ def generate_data_recipe(prompt: str, ...) -> str:
     # ... logic ...
 ```
 
-- **Decorator**: `@mcp.tool()` exposes the Python function as a tool.
-- **Type Hints**: Critical! MCP uses Python type hints (`str`, `int`, etc.) and docstrings to automatically generate the separate definition that tells the LLM how to use the tool.
-- **Use Case**: Executing code, searching databases, or in this case, generating and running a DataOps recipe.
+- **Decorator**: I used `@mcp.tool()` to expose the Python function as a tool.
+- **Type Hints**: I found these critical! MCP uses my Python type hints (`str`, `int`, etc.) to automatically generate the separate definition that tells the LLM how to use the tool.
+- **Use Case**: I use this for executing code, searching databases, or in this case, generating and running a DataOps recipe.
 
-# Practical Exercise: Adding a Tool
+# Practical Exercise: How I Added a Tool
 
-We added a new capability to the server: `get_system_time`.
+I decided to add a new capability to the server: `get_system_time`.
 
 ## 1. Code Change
-We modified `src/mcp_server/tools.py` to include:
+I modified `src/mcp_server/tools.py` to include:
 
 ```python
 import datetime
@@ -72,23 +72,23 @@ def get_system_time() -> str:
     return datetime.datetime.now().isoformat()
 ```
 
-## 2. Test It
-Running our verification script confirmed the tool is registered:
+## 2. Testing It
+I ran my verification script and confirmed the tool was registered:
 `Registered Tools: ['generate_data_recipe', 'get_system_time']`
 
 # Using the Server
 
-To truly understand how a client (like Claude) sees your server, we created a demo client script.
+To truly understand how a client (like Claude) sees my server, I created a demo client script.
 
 ## 1. Running the Demo Client
-Run the following specific command in your terminal:
+I run this specific command in my terminal:
 
 ```bash
 python scripts/demo_client.py
 ```
 
 This script:
-1.  **Lists available tools**: It asks the server "What can you do?"
+1.  **Lists available tools**: It asks my server "What can you do?"
 2.  **Calls a tool**: It asks the server to execute `get_system_time`.
 
 **Expected Output:**
@@ -104,8 +104,8 @@ Result: ([TextContent(type='text', text='2026-01-05T21:10...', ...)], ...)
 
 ## 2. Integrating with Claude Desktop
 To use this with Claude Desktop app:
-1.  Open your Claude Desktop config (usually `%APPDATA%\Claude\claude_desktop_config.json` on Windows).
-2.  Add this server:
+1.  I open my Claude Desktop config (usually `%APPDATA%\Claude\claude_desktop_config.json` on Windows).
+2.  I add this server:
 
 ```json
 {
@@ -123,39 +123,38 @@ To use this with Claude Desktop app:
   }
 }
 ```
-*Note: You need to use the absolute path to your `src` directory in PYTHONPATH.*
 
 # The "Why": MCP vs Internal LLM
 
-You might ask: *"We already use Google LLM inside `generate_data_recipe`. Why do we need MCP?"*
+One might ask: *"I already use Google LLM inside `generate_data_recipe`. Why do I need MCP?"*
 
-Think of it as **Manager vs. Specialist**.
+I think of it as **Manager vs. Specialist**.
 
--   **The Manager (MCP Client)**: This is Claude (or any other intelligent interface). It has the big picture, handles the user conversation, and knows *when* to delegate.
--   **The Specialist (MCP Server)**: This is your `agentic-dataops`. It has specific skills (DataOps), access to specific local files (CSVs), and uses its own specialized tools (Google LLM for recipe gen).
+-   **The Manager (MCP Client)**: This is Claude. It has the big picture, handles the user conversation, and knows *when* to delegate.
+-   **The Specialist (MCP Server)**: This is my `agentic-dataops` code. It has specific skills (DataOps), access to specific local files (CSVs), and uses its own specialized tools (Google LLM for recipe gen).
 
-**The Workflow**:
+**The Workflow I Implemented**:
 1.  **User**: "Claude, look at the sales data and tell me the trends."
 2.  **Claude (Manager)**: "I don't have that data. But I see a tool `generate_data_recipe`. I'll ask it." -> **Calls MCP Tool**.
-3.  **MCP Server (Specialist)**: Receives the request. Uses its **internal Google LLM** to write Python code to analyze the CSVs. Runs the code. Returns the *result* (e.g., "Revenue up 20%").
-4.  **Claude (Manager)**: "Great." -> Tells user: "The data shows revenue is up 20%..."
+3.  **MCP Server (Specialist)**: Receives the request. Uses its **internal Google LLM** to write Python code to analyze the CSVs. Runs the code. Returns the *result*.
+4.  **Claude (Manager)**: "Great." -> Tells user: "The data shows revenue is up..."
 
-MCP Bridges the gap between the **General Intelligence** (Claude) and your **Specialized Logic** (DataOps + Google LLM).
+MCP Bridges the gap between the **General Intelligence** (Claude) and my **Specialized Logic** (DataOps + Google LLM).
 
 # Advanced Usage: Full Workflow Demo
 
-We updated `scripts/demo_client.py` to demonstrate the full architectural workflow:
+I updated `scripts/demo_client.py` to demonstrate the full architectural workflow:
 
-1.  **Preparation**: We specify paths to `data/sales.csv` and `data/regions.csv`.
-2.  **The Request**: The client calls `generate_data_recipe` with the prompt: *"Calculate total revenue by region"*.
+1.  **Preparation**: I specify paths to `data/sales.csv` and `data/regions.csv`.
+2.  **The Request**: My client calls `generate_data_recipe` with the prompt: *"Calculate total revenue by region"*.
 3.  **The Specialist Acting**: 
-    -   The server received the filepath and prompt.
-    -   It used the **Google LLM** to internalize the schema and generate a recipe.
-    -   It executed the recipe using pandas.
-4.  **The Result**: The server returned the path to the report and the output CSV.
+    -   My server receives the filepath and prompt.
+    -   It uses the **Google LLM** to internalize the schema and generate a recipe.
+    -   It executes the recipe using pandas.
+4.  **The Result**: My server returns the path to the report and the output CSV.
 
-Run it yourself:
+I run it myself with:
 ```bash
 python scripts/demo_client.py
 ```
-You will see the "Specialist" in action, generating a real DataOps report!
+This lets me see the "Specialist" in action!
