@@ -5,5 +5,13 @@
     "report_dir": "reports",
     "default_format": "parquet"
   },
-  "runs": []
+  "runs": [
+    {
+      "timestamp": "2026-01-06T16:48:12.874310",
+      "goal": "MCP Request: Calculate total revenue by region",
+      "out_path": "output_demo.csv",
+      "report_path": "reports\\20260106_164812_MCP_Request-_Calculate_total_revenue_by_region.md",
+      "reflection_ok": true
+    }
+  ]
 }
