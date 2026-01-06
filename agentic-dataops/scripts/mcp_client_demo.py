@@ -36,7 +36,7 @@ async def main():
         print(f" - Sales: {sales_path}")
         
         result = await mcp.call_tool("generate_data_recipe", arguments={
-            "prompt": "Calculate total revenue by region",
+            "prompt": "how are you doing?",
             "sales_path": sales_path,
             "regions_path": regions_path,
             "out_path": out_path

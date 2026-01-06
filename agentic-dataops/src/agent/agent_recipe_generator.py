@@ -17,11 +17,17 @@ DEFAULT_PROMPT_TEMPLATE = (
     "used by `transform()`: optional `select` (list), optional `filter` (string),\n"
     "optional `derive` (list of {name, expr}), optional `join` (object),\n"
     "and optional `groupby` (object). Return ONLY valid JSON (no surrounding\n"
-    "markdown). Example: {\n"
+    "markdown). \n"
+    "If the user request is vague, nonsense, or not related to data operations,\n"
+    "return a JSON with a single key `clarification` containing a question string.\n"
+    "Example Recipe: {\n"
     "  \"select\": [\"order_id\", \"date\", \"region\"],\n"
     "  \"join\": {\"right_df\": \"regions\", \"on\": [\"region\"], \"how\": \"left\"},\n"
     "  \"derive\": [{\"name\":\"date_day\", \"expr\":\"pd.to_datetime(df['date']).dt.date.astype(str)\"}],\n"
     "  \"groupby\": {\"by\": [\"date_day\", \"region_name\"], \"agg\": {\"revenue\": \"sum\"}}\n"
+    "}\n"
+    "Example Clarification: {\n"
+    "  \"clarification\": \"Could you specify which dataset you want to analyze?\"\n"
     "}\n"
 )
 
@@ -53,6 +59,10 @@ def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float 
         obj = json.loads(blob)
     except json.JSONDecodeError as e:
         raise ValueError("Failed to parse JSON from LLM response") from e
+
+    # Check for clarification request
+    if "clarification" in obj:
+        return obj  # Return the clarification object directly
 
     # Minimal validation: ensure types match expected simple schema
     if "select" in obj and not isinstance(obj["select"], list):

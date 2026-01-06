@@ -47,6 +47,9 @@ def register_tools(mcp: FastMCP):
         llm = LLMClient() # Uses env vars
         recipe = generate_recipe_from_prompt(prompt, llm, dataset_context=dataset_context)
         
+        if "clarification" in recipe:
+            return f"CLARIFICATION NEEDED: {recipe['clarification']}"
+
         # Execution
         inputs = {
             "sales_path": sales_path,
