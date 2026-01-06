@@ -5,7 +5,7 @@ The Model Context Protocol (MCP) allows AI models to interact with external data
 Here is a step-by-step breakdown of how it works in your project.
 
 ## 1. The Server Entry Point (`src/mcp_server/main.py`)
-This file is the specific brain of your MCP application.
+This file is the specific brain of your MCP APPLICATION.
 
 ```python
 # src/mcp_server/main.py
@@ -124,3 +124,38 @@ To use this with Claude Desktop app:
 }
 ```
 *Note: You need to use the absolute path to your `src` directory in PYTHONPATH.*
+
+# The "Why": MCP vs Internal LLM
+
+You might ask: *"We already use Google LLM inside `generate_data_recipe`. Why do we need MCP?"*
+
+Think of it as **Manager vs. Specialist**.
+
+-   **The Manager (MCP Client)**: This is Claude (or any other intelligent interface). It has the big picture, handles the user conversation, and knows *when* to delegate.
+-   **The Specialist (MCP Server)**: This is your `agentic-dataops`. It has specific skills (DataOps), access to specific local files (CSVs), and uses its own specialized tools (Google LLM for recipe gen).
+
+**The Workflow**:
+1.  **User**: "Claude, look at the sales data and tell me the trends."
+2.  **Claude (Manager)**: "I don't have that data. But I see a tool `generate_data_recipe`. I'll ask it." -> **Calls MCP Tool**.
+3.  **MCP Server (Specialist)**: Receives the request. Uses its **internal Google LLM** to write Python code to analyze the CSVs. Runs the code. Returns the *result* (e.g., "Revenue up 20%").
+4.  **Claude (Manager)**: "Great." -> Tells user: "The data shows revenue is up 20%..."
+
+MCP Bridges the gap between the **General Intelligence** (Claude) and your **Specialized Logic** (DataOps + Google LLM).
+
+# Advanced Usage: Full Workflow Demo
+
+We updated `scripts/demo_client.py` to demonstrate the full architectural workflow:
+
+1.  **Preparation**: We specify paths to `data/sales.csv` and `data/regions.csv`.
+2.  **The Request**: The client calls `generate_data_recipe` with the prompt: *"Calculate total revenue by region"*.
+3.  **The Specialist Acting**: 
+    -   The server received the filepath and prompt.
+    -   It used the **Google LLM** to internalize the schema and generate a recipe.
+    -   It executed the recipe using pandas.
+4.  **The Result**: The server returned the path to the report and the output CSV.
+
+Run it yourself:
+```bash
+python scripts/demo_client.py
+```
+You will see the "Specialist" in action, generating a real DataOps report!
