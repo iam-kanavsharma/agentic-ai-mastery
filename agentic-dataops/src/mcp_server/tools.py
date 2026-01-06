@@ -1,4 +1,5 @@
 from typing import Any, Dict
+import os
 import json
 import pandas as pd
 from mcp.server.fastmcp import FastMCP, Context
@@ -58,4 +59,11 @@ def register_tools(mcp: FastMCP):
         
         result = orchestrator.run_agent(inputs["report_title"], inputs)
         
-        return f"Recipe executed. Report: {result.get('report_path')}. Output saved to: {result.get('out_path')}"
+        # Helper to prettify paths for the LLM
+        def to_rel(p):
+            try:
+                return os.path.relpath(p) if p else "None"
+            except:
+                return str(p)
+
+        return f"Recipe executed. Report: {to_rel(result.get('report_path'))}. Output saved to: {to_rel(result.get('out_path'))}"

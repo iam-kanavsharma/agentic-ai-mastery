@@ -117,7 +117,7 @@ To use this with Claude Desktop app:
         "mcp_server.main"
       ],
       "env": {
-          "PYTHONPATH": "C:/Users/.../agentic-dataops/src"
+          "PYTHONPATH": "/ABSOLUTE/PATH/TO/agentic-dataops/src"
       }
     }
   }

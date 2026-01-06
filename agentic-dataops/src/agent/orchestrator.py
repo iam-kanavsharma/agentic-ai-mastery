@@ -14,7 +14,7 @@ def write_report(title: str, sections: List[Tuple[str, str]], out_dir: Optional[
     rpt_dir = out_dir or MEM["preferences"]["report_dir"]
     rpt_dir = safe_path(rpt_dir)
     ensure_dir(rpt_dir)
-    name = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{title.replace(' ','_')}.md"
+    name = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{title.replace(' ','_').replace(':','-')}.md"
     path = os.path.join(rpt_dir, name)
     content = [f"# {title}", ""]
     for h, body in sections:
@@ -57,6 +57,13 @@ def reflect(run_log: Dict[str, Any]) -> Tuple[bool, List[str]]:
         issues.append("Output has zero rows.")
     return (len(issues) == 0, issues)
 
+# ---------- Helper ----------
+def to_relative(path: str) -> str:
+    try:
+        return os.path.relpath(path)
+    except Exception:
+        return path
+
 # ---------- Orchestrator ----------
 def run_agent(goal: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
     steps = plan(goal, inputs)
@@ -77,12 +84,12 @@ def run_agent(goal: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
         if op == "load_sales":
             sales_df = load_df(st["path"])
             log["sales_path"] = st["path"]
-            log["sections"].append(("Loaded Sales", f"Rows: {len(sales_df)}  |  Path: {st['path']}"))
+            log["sections"].append(("Loaded Sales", f"Rows: {len(sales_df)}  |  Path: {to_relative(st['path'])}"))
 
         elif op == "load_regions":
             regions_df = load_df(st["path"])
             log["regions_path"] = st["path"]
-            log["sections"].append(("Loaded Regions", f"Rows: {len(regions_df)}  |  Path: {st['path']}"))
+            log["sections"].append(("Loaded Regions", f"Rows: {len(regions_df)}  |  Path: {to_relative(st['path'])}"))
 
         elif op == "profile_input":
             prof = profile_df(sales_df)
@@ -109,7 +116,7 @@ def run_agent(goal: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
             save_df(df, st["path"])
             log["saved"] = True
             log["out_path"] = st["path"]
-            log["sections"].append(("Save", f"Saved to {st['path']}"))
+            log["sections"].append(("Save", f"Saved to {to_relative(st['path'])}"))
 
         elif op == "profile_output":
             df = output_df if output_df is not None else sales_df
@@ -130,8 +137,8 @@ def run_agent(goal: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
     MEM["runs"].append({
         "timestamp": datetime.now().isoformat(),
         "goal": goal,
-        "out_path": log.get("out_path"),
-        "report_path": log.get("report_path"),
+        "out_path": to_relative(log.get("out_path")),
+        "report_path": to_relative(log.get("report_path")),
         "reflection_ok": log.get("reflection_ok", False)
     })
     save_memory(MEM)
