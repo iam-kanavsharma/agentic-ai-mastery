@@ -16,6 +16,7 @@ if "LLM_BACKEND" not in os.environ:
 
 from agent.agent_recipe_generator import generate_recipe_from_prompt
 from agent.llm_client import LLMClient
+from agent.reviewer_agent import ReviewerAgent
 
 def load_dataset(path: str) -> List[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
@@ -55,7 +56,14 @@ def run_evals():
                 else:
                     print(f"  [FAIL] Expected clarification, but got recipe: {result.keys()}")
                 continue
-                
+
+            # Run Reviewer
+            reviewer = ReviewerAgent(llm=llm)
+            review = reviewer.review_recipe(case["prompt"], result, context=mock_context)
+            if not review.approved:
+                print(f"  [FAIL] Reviewer rejected valid recipe: {review.feedback}")
+                continue
+            
             # Check Keys
             if "clarification" in result:
                  print(f"  [FAIL] Unexpected clarification: {result['clarification']}")

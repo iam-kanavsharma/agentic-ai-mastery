@@ -58,8 +58,17 @@ Key variables:
 
 1. **Create project folder**: `mkdir agentic-dataops && cd agentic-dataops`
 2. **Create virtual env**: `python -m venv .venv`
-3. **Install my package**: `pip install -e .`
-4. **Create data folders**: `mkdir -p data clean reports`
+3. **Activate virtual env**:
+- Windows (Command Prompt):
+  `.venv\Scripts\activate`
+- Windows (PowerShell):
+  `.venv\Scripts\Activate.ps1`
+- Windows (Git Bash / MSYS):
+  `source .venv/Scripts/activate`
+- macOS / Linux (bash, zsh):
+  `source .venv/bin/activate`
+4. **Install my package**: `pip install -e .`
+5. **Create data folders**: `mkdir -p data clean reports`
 
 ## Quickstart
 

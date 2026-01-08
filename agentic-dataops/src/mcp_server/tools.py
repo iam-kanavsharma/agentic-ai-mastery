@@ -50,6 +50,14 @@ def register_tools(mcp: FastMCP):
         if "clarification" in recipe:
             return f"CLARIFICATION NEEDED: {recipe['clarification']}"
 
+        # Reviewer Step
+        from agent.reviewer_agent import ReviewerAgent
+        reviewer = ReviewerAgent(llm=llm)
+        review = reviewer.review_recipe(prompt, recipe, context=dataset_context)
+        
+        if not review.approved:
+            return f"RECIPE REJECTED by Reviewer: {review.feedback}"
+
         # Execution
         inputs = {
             "sales_path": sales_path,
