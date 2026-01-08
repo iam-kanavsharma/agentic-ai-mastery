@@ -15,6 +15,9 @@ from .resources import register_resources
 register_tools(mcp)
 register_resources(mcp)
 
+from .databricks_tools import register_databricks_tools
+register_databricks_tools(mcp)
+
 def main():
     mcp.run()
 

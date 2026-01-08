@@ -32,13 +32,25 @@ DEFAULT_PROMPT_TEMPLATE = (
 )
 
 
-def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float = 0.0, dataset_context: str = "") -> Dict[str, Any]:
+
+PYSPARK_INSTRUCTIONS = (
+    "\nIMPORTANT: The user wants a PySpark recipe. \n"
+    "For `derive` expressions, usage PySpark `pyspark.sql.functions` syntax.\n"
+    "Example Derive: [{\"name\": \"year\", \"expr\": \"year(col('date'))\"}]\n"
+    "Do NOT use Pandas syntax like `df['col']`."
+)
+
+def generate_recipe_from_prompt(prompt: str, llm: LLMClient, temperature: float = 0.0, dataset_context: str = "", dialect: str = "pandas") -> Dict[str, Any]:
     """Generate a recipe dict from a natural-language prompt using `llm`.
 
-    This performs minimal validation and returns a dict suitable for
-    `transform()`.
+    Args:
+        dialect: 'pandas' or 'pyspark'. Controls the syntax advice given to the LLM.
     """
     full_prompt = DEFAULT_PROMPT_TEMPLATE
+    
+    if dialect == "pyspark":
+        full_prompt += PYSPARK_INSTRUCTIONS
+        
     if dataset_context:
         full_prompt += f"\nContext - Available Datasets:\n{dataset_context}\n"
     
